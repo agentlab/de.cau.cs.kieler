@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="layoutProviders" name="Layout Providers" schema="schema/layoutProviders.exsd"/>
+   <extension-point id="layoutInfo" name="Layout Info" schema="schema/layoutInfo.exsd"/>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="de.cau.cs.kieler.kiml.klayoutdata.KLayoutDataPackage"
+            genModel="model/klayoutdata.genmodel"
+            uri="http://kieler.cs.cau.de/KLayoutData">
+      </package>
+   </extension>
+   <extension
+         point="de.cau.cs.kieler.kiml.layoutProviders">
+      <category
+            id="de.cau.cs.kieler"
+            name="KIELER">
+      </category>
+      <layoutAlgorithm
+            category="de.cau.cs.kieler"
+            class="de.cau.cs.kieler.kiml.util.FixedLayoutProvider"
+            description="Keeps the current layout as it is, without any automatic modification. Optional coordinates can be given for nodes and edge bend points."
+            id="de.cau.cs.kieler.fixed"
+            name="Fixed Layout">
+         <knownOption
+               option="de.cau.cs.kieler.position">
+         </knownOption>
+         <knownOption
+               option="de.cau.cs.kieler.bendPoints">
+         </knownOption>
+         <knownOption
+               default="15"
+               option="de.cau.cs.kieler.borderSpacing">
+         </knownOption>
+      </layoutAlgorithm>
+      <layoutAlgorithm
+            category="de.cau.cs.kieler"
+            class="de.cau.cs.kieler.kiml.util.BoxLayoutProvider"
+            description="Algorithm for packing of unconnected boxes, i.e. graphs without edges."
+            id="de.cau.cs.kieler.box"
+            name="Box Layout"
+            preview="images/box_layout.png">
+         <supportedDiagram
+               priority="10"
+               type="de.cau.cs.kieler.layout.diagrams.boxes">
+         </supportedDiagram>
+         <knownOption
+               default="15"
+               option="de.cau.cs.kieler.spacing">
+         </knownOption>
+         <knownOption
+               default="15"
+               option="de.cau.cs.kieler.borderSpacing">
+         </knownOption>
+         <knownOption
+               default="0"
+               option="de.cau.cs.kieler.priority">
+         </knownOption>
+         <knownOption
+               option="de.cau.cs.kieler.expandNodes">
+         </knownOption>
+         <knownOption
+               option="de.cau.cs.kieler.sizeConstraint">
+         </knownOption>
+         <knownOption
+               option="de.cau.cs.kieler.sizeOptions">
+         </knownOption>
+         <knownOption
+               default="1.3"
+               option="de.cau.cs.kieler.aspectRatio">
+         </knownOption>
+         <knownOption
+               option="de.cau.cs.kieler.interactive">
+         </knownOption>
+      </layoutAlgorithm>
+      <layoutAlgorithm
+            category="de.cau.cs.kieler"
+            class="de.cau.cs.kieler.kiml.util.RandomLayoutProvider"
+            description="Distributes the nodes randomly on the plane, leading to very obfuscating layouts. Can be useful to demonstrate the power of &quot;real&quot; layout algorithms."
+            id="de.cau.cs.kieler.random"
+            name="Randomizer"
+            preview="images/random.png">
+         <knownOption
+               default="0"
+               option="de.cau.cs.kieler.randomSeed">
+         </knownOption>
+         <knownOption
+               default="15"
+               option="de.cau.cs.kieler.spacing">
+         </knownOption>
+         <knownOption
+               default="15"
+               option="de.cau.cs.kieler.borderSpacing">
+         </knownOption>
+         <knownOption
+               default="1.6"
+               option="de.cau.cs.kieler.aspectRatio">
+         </knownOption>
+      </layoutAlgorithm>
+      <layoutType
+            description="The layer-based method was introduced by Sugiyama, Tagawa and Toda in 1981. It emphasizes the direction of edges by pointing as many edges as possible into the same direction. The nodes are arranged in layers, which are sometimes called &quot;hierarchies&quot;, and then reordered such that the number of edge crossings is minimized. Afterwards, concrete coordinates are computed for the nodes and edge bend points."
+            id="de.cau.cs.kieler.type.layered"
+            name="Layered">
+      </layoutType>
+      <layoutType
+            description="Orthogonal methods that follow the &quot;topology-shape-metrics&quot; approach by Batini, Nardelli and Tamassia '86. The first phase determines the topology of the drawing by applying a planarization technique, which results in a planar representation of the graph. The orthogonal shape is computed in the second phase, which aims at minimizing the number of edge bends, and is called orthogonalization. The third phase leads to concrete coordinates for nodes and edge bend points by applying a compaction method, thus defining the metrics."
+            id="de.cau.cs.kieler.type.orthogonal"
+            name="Orthogonal">
+      </layoutType>
+      <layoutType
+            description="Layout algorithms that follow physical analogies by simulating a system of attractive and repulsive forces. The first successful method of this kind was proposed by Eades in 1984."
+            id="de.cau.cs.kieler.type.force"
+            name="Force">
+      </layoutType>
+      <layoutType
+            description="Circular layout algorithms emphasize cycles or biconnected components of a graph by arranging them in circles. This is useful if a drawing is desired where such components are clearly grouped, or where cycles are shown as prominent properties of the graph."
+            id="de.cau.cs.kieler.type.circle"
+            name="Circular">
+      </layoutType>
+      <layoutType
+            description="Specialized layout methods for trees, i.e. acyclic graphs. The regular structure of graphs that have no undirected cycles can be emphasized using an algorithm of this type."
+            id="de.cau.cs.kieler.type.tree"
+            name="Tree">
+      </layoutType>
+      <layoutOption
+            appliesTo="nodes"
+            class="de.cau.cs.kieler.kiml.options.Alignment"
+            default="AUTOMATIC"
+            description="Alignment of the selected node relative to other nodes in the same row or column."
+            id="de.cau.cs.kieler.alignment"
+            name="Alignment"
+            type="enum">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="0.0"
+            description="The aimed aspect ratio of the drawing, that is the quotient of width by height"
+            id="de.cau.cs.kieler.aspectRatio"
+            lowerBound="0.01"
+            name="Aspect Ratio"
+            type="float"
+            upperBound="100"
+            variance="0.5">
+      </layoutOption>
+      <layoutOption
+            appliesTo="edges"
+            class="de.cau.cs.kieler.core.math.KVectorChain"
+            description="The fixed list of bend points for the edge"
+            id="de.cau.cs.kieler.bendPoints"
+            name="Bend Points"
+            type="object">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="-1.0"
+            description="Minimal amount of space to be left to the border"
+            id="de.cau.cs.kieler.borderSpacing"
+            lowerBound="0"
+            name="Border Spacing"
+            type="float"
+            upperBound="1000"
+            variance="3.0">
+      </layoutOption>
+      <layoutOption
+            advanced="true"
+            appliesTo="parents"
+            default="false"
+            description="Whether additional debug information shall be displayed"
+            id="de.cau.cs.kieler.debugMode"
+            name="Debug Mode"
+            type="boolean"
+            variance="0">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            class="de.cau.cs.kieler.kiml.options.Direction"
+            default="UNDEFINED"
+            description="Overall direction of edges: horizontal (right / left) or vertical (down / up)"
+            id="de.cau.cs.kieler.direction"
+            lowerBound="1"
+            name="Direction"
+            type="enum">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            class="de.cau.cs.kieler.kiml.options.EdgeRouting"
+            default="UNDEFINED"
+            description="Defines how edges are routed"
+            id="de.cau.cs.kieler.edgeRouting"
+            lowerBound="1"
+            name="Edge Routing"
+            type="enum">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="false"
+            description="If active, nodes are expanded to fill the area of their parent"
+            id="de.cau.cs.kieler.expandNodes"
+            name="Expand Nodes"
+            type="boolean">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="false"
+            description="Optimize the layout for user interaction by considering previous layout"
+            id="de.cau.cs.kieler.interactive"
+            name="Interactive"
+            type="boolean"
+            variance="0">
+      </layoutOption>
+      <layoutOption
+            appliesTo="edges,nodes"
+            default="-1.0"
+            description="Spacing between labels and other objects."
+            id="de.cau.cs.kieler.labelSpacing"
+            lowerBound="0"
+            name="Label Spacing"
+            type="float"
+            upperBound="1000"
+            variance="1.0">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="false"
+            description="Whether the selected layouter should consider the full hierarchy"
+            id="de.cau.cs.kieler.layoutHierarchy"
+            name="Layout Hierarchy"
+            type="boolean">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            description="Select either a specific layout algorithm or a layout type"
+            id="de.cau.cs.kieler.algorithm"
+            name="Layout Algorithm"
+            type="string">
+      </layoutOption>
+      <layoutOption
+            appliesTo="nodes"
+            class="de.cau.cs.kieler.kiml.options.PortConstraints"
+            default="UNDEFINED"
+            description="Defines constraints of the position of the ports of a node"
+            id="de.cau.cs.kieler.portConstraints"
+            lowerBound="1"
+            name="Port Constraints"
+            type="enum">
+      </layoutOption>
+      <layoutOption
+            appliesTo="nodes,ports,labels"
+            class="de.cau.cs.kieler.core.math.KVector"
+            description="The fixed position of the element"
+            id="de.cau.cs.kieler.position"
+            name="Position"
+            type="object">
+      </layoutOption>
+      <layoutOption
+            appliesTo="nodes,edges"
+            description="Defines the priority of an object; its meaning depends on the specific layout algorithm"
+            id="de.cau.cs.kieler.priority"
+            name="Priority"
+            type="int"
+            variance="2.0">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            description="Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated"
+            id="de.cau.cs.kieler.randomSeed"
+            name="Randomization Seed"
+            type="int"
+            variance="5.0">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            description="Whether each connected component should be processed separately"
+            id="de.cau.cs.kieler.separateConnComp"
+            name="Separate Connected Components"
+            type="boolean">
+      </layoutOption>
+      <layoutOption
+            appliesTo="nodes"
+            class="de.cau.cs.kieler.kiml.options.SizeConstraint"
+            default=""
+            description="What is taken into account when resizing nodes; no selection means that node sizes are fixed."
+            id="de.cau.cs.kieler.sizeConstraint"
+            name="Size Constraint"
+            type="enumset">
+      </layoutOption>
+      <layoutOption
+            appliesTo="nodes"
+            class="de.cau.cs.kieler.kiml.options.SizeOptions"
+            default="DEFAULT_MINIMUM_SIZE"
+            description="Options modifying how the size constraints set on a node are interpreted."
+            id="de.cau.cs.kieler.sizeOptions"
+            name="Size Options"
+            type="enumset">
+      </layoutOption>
+      <layoutOption
+            appliesTo="parents"
+            default="-1.0"
+            description="Overall setting for the minimal amount of space to be left between objects"
+            id="de.cau.cs.kieler.spacing"
+            lowerBound="0"
+            name="Spacing"
+            type="float"
+            upperBound="1000"
+            variance="7.0">
+      </layoutOption>
+     <layoutOption
+           advanced="true"
+           default="false"
+           description="Whether the node should be regarded as a comment box instead of a regular node."
+           id="de.cau.cs.kieler.commentBox"
+           name="Comment Box (programmatic)"
+           type="boolean"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           description="Identifier of a diagram type that is associated with the children of the respective node"
+           id="de.cau.cs.kieler.diagramType"
+           name="Diagram Type (programmatic)"
+           type="string"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           class="de.cau.cs.kieler.kiml.options.EdgeLabelPlacement"
+           default="UNDEFINED"
+           description="Gives a hint on where to put edge labels"
+           id="de.cau.cs.kieler.edgeLabelPlacement"
+           name="Edge Label Placement (programmatic)"
+           type="enum"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           appliesTo="nodes"
+           advanced="true"
+           class="de.cau.cs.kieler.kiml.options.NodeLabelPlacement"
+           default=""
+           description="Hints for where node labels are to be placed; if empty, the node label's position is not modified."
+           id="de.cau.cs.kieler.nodeLabelPlacement"
+           name="Node Label Placement"
+           type="enumset">
+     </layoutOption>
+     <layoutOption
+           appliesTo="nodes"
+           class="de.cau.cs.kieler.kiml.options.PortLabelPlacement"
+           default="OUTSIDE"
+           description="Decides on a placement method for port labels."
+           id="de.cau.cs.kieler.portLabelPlacement"
+           name="Port Label Placement"
+           type="enum">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           class="de.cau.cs.kieler.kiml.options.EdgeType"
+           default="NONE"
+           description="The type of the edge."
+           id="de.cau.cs.kieler.edgeType"
+           name="Edge Type (programmatic)"
+           type="enum"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           description="Font name used for a label"
+           id="de.cau.cs.kieler.fontName"
+           name="Font Name (programmatic)"
+           type="string"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           description="Font size used for a label"
+           id="de.cau.cs.kieler.fontSize"
+           name="Font Size (programmatic)"
+           type="int"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           default="false"
+           description="Whether the node should be handled as a hypernode"
+           id="de.cau.cs.kieler.hypernode"
+           name="Hypernode (programmatic)"
+           type="boolean"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           default="0"
+           description="The minimal height to which a node can be reduced"
+           id="de.cau.cs.kieler.minHeight"
+           name="Minimal Height (programmatic)"
+           type="float"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           default="0"
+           description="The minimal width to which a node can be reduced"
+           id="de.cau.cs.kieler.minWidth"
+           name="Minimal Width (programmatic)"
+           type="float"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           default="false"
+           description="Indicates that no layout should be done for the diagram part"
+           id="de.cau.cs.kieler.noLayout"
+           name="No Layout (programmatic)"
+           type="boolean">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           description="The offset of ports on the node border"
+           id="de.cau.cs.kieler.offset"
+           name="Port Offset (programmatic)"
+           type="float"
+           variance="0">
+     </layoutOption>
+     <layoutOption
+           advanced="true"
+           class="de.cau.cs.kieler.kiml.options.PortSide"
+           default="UNDEFINED"
+           description="The side of a node on which a port is situated"
+           id="de.cau.cs.kieler.portSide"
+           name="Port Side (programmatic)"
+           type="enum"
+           variance="0">
+     </layoutOption>
+   </extension>
+   <extension
+         point="de.cau.cs.kieler.kiml.layoutInfo">
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.general"
+            name="General">
+      </diagramType>
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.stateMachine"
+            name="State Machine">
+      </diagramType>
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.dataFlow"
+            name="Data Flow Diagram">
+      </diagramType>
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.classDiagram"
+            name="Class Diagram">
+      </diagramType>
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.usecaseDiagram"
+            name="Use Case Diagram">
+      </diagramType>
+      <diagramType
+            id="de.cau.cs.kieler.layout.diagrams.boxes"
+            name="Unconnected Boxes">
+      </diagramType>
+      <option
+            class="org.eclipse.emf.ecore.EPackage"
+            option="de.cau.cs.kieler.diagramType"
+            value="de.cau.cs.kieler.layout.diagrams.classDiagram">
+      </option>
+      <option
+            class="org.eclipse.emf.ecore.EPackage"
+            option="de.cau.cs.kieler.spacing"
+            value="40">
+      </option>
+      <option
+            class="org.eclipse.emf.ecore.EReference"
+            option="de.cau.cs.kieler.edgeType"
+            value="ASSOCIATION">
+      </option>
+      <option
+            class="de.cau.cs.kieler.layout.diagrams.dataFlow"
+            option="de.cau.cs.kieler.edgeRouting"
+            value="ORTHOGONAL">
+      </option>
+   </extension>
+
+</plugin>
